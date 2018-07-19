@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改文本框的值</title>
+    <style>
+        #wrap{
+            width: 300px;
+            margin: 0 auto;
+        }
+        #header{
+            width: 300px;
+            height: 25px;
+            text-indent: 5px;
+            background: green;
+            color: #fff;
+        }
+        #ulist{
+            margin: 0;
+            padding: 0;
+        }
+        #ulist li{
+            list-style: none;
+            margin-top: 5px;
+            position: relative;
+            border-bottom: 1px solid #61e9ff;
+        }
+        #ulist li input{
+            border: none;
+        }
+        .ok,.cancle{
+            background: #fff;
+            color: green;
+            display:none;
+        }
+        .ok:hover,.cancle:hover{
+            background: green;
+            color: #fff;
+        }
+        .text{
+            width: 200px;
+            height: 30px;
+            line-height: 30px;
+            word-break: keep-all;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        #ulist .pen{
+            width: 15px;
+            height: 15px;
+            position: absolute;
+            top: 5px;
+            left: 150px;
+        }
+    </style>
+    <script>
+        function len(s) {
+            var l = 0;
+            var a = s.split("");
+            for (var i=0;i<a.length;i++) {
+                if (a[i].charCodeAt(0)<299) {
+                    l++;
+                } else {
+                    l+=2;
+                }
+            }
+            return l;
+        }
+
+        window.onload = function () {
+            var oUl = document.getElementById('ulist');
+            var aLi = oUl.getElementsByTagName('li');
+            for(var i=0; i<aLi.length; i++){
+                tips(aLi[i]);
+            }
+            function tips(li){
+                var oTxt = li.getElementsByClassName('text')[0];
+                var oPen = li.getElementsByClassName('pen')[0];
+                var oOk = li.getElementsByClassName('ok')[0];
+                var oCancle = li.getElementsByClassName('cancle')[0];
+                var sOld = '';
+                oPen.style.left = (len(oTxt.value)||len(oTxt.placeholder))*6+20+'px';
+                function click(show,value){
+                    var sShow = show?'inline-block':'none';
+                    oOk.style.display = sShow;
+                    oCancle.style.display = sShow;
+                    oPen.style.display = show?'none':'block';
+                    if(!show){
+                        var left = (len(value)||len(oTxt.placeholder))*6+20;
+                        if(left > 210 )
+                            left = 210;
+                        oPen.style.left = left+'px';
+                        oTxt.setAttribute("readonly","readonly");
+                    }else{
+                        oTxt.removeAttribute("readonly");
+                        sOld = oTxt.value;
+                        oTxt.focus();
+                    }
+                }
+                oPen.onclick = function (){
+                    click(true);
+                }
+                oOk.onclick = function (){
+                    click(false,oTxt.value)
+                }
+                oCancle.onclick = function () {
+                    click(false,sOld);
+                    if(sOld != '')
+                      oTxt.value = sOld;
+                    else
+                        oTxt.value = '';
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+<div id="wrap">
+    <div id="header">分类名称</div>
+    <ul id="ulist">
+        <li>
+            <input class="text" type="text" value="" placeholder="扫地洗碗洗衣服" readonly>
+            <img class="pen" src="img/pen2.png" alt="" title="点击进行修改">
+            <input class="ok" type="button" value="保存">
+            <input class="cancle" type="button" value="取消">
+        </li>
+        <li>
+            <input class="text" type="text" value="" placeholder="买菜做饭" readonly>
+            <img class="pen" src="img/pen2.png" alt="" title="点击进行修改">
+            <input class="ok" type="button" value="保存">
+            <input class="cancle" type="button" value="取消">
+        </li>
+        <li>
+            <input class="text" type="text" value="" placeholder="逛街买吃的" readonly>
+            <img class="pen" src="img/pen2.png" alt="" title="点击进行修改">
+            <input class="ok" type="button" value="保存">
+            <input class="cancle" type="button" value="取消">
+        </li>
+    </ul>
+</div>
+</body>
+</html>
